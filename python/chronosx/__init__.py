@@ -13,6 +13,10 @@ from .risk_engine import RiskEngine, RiskLimits
 from .matching_engine import MatchingEngine
 from .oms import OrderManagementSystem, OrderRequest, OmsResponse
 from .simulator import Simulator, ScenarioEvent, EventKind
+from .market_data import MarketDataPublisher, BookSnapshot, TradeReport, PriceLevelSnapshot
+from .position_manager import PositionManager, Position, Fill
+from .market_maker import MarketMaker, MMConfig
+from .stats import SessionStats
 
 __all__ = [
     "PRICE_MULT", "INVALID_ORDER_ID", "INVALID_PRICE",
@@ -27,4 +31,8 @@ __all__ = [
     "MatchingEngine",
     "OrderManagementSystem", "OrderRequest", "OmsResponse",
     "Simulator", "ScenarioEvent", "EventKind",
+    "MarketDataPublisher", "BookSnapshot", "TradeReport", "PriceLevelSnapshot",
+    "PositionManager", "Position", "Fill",
+    "MarketMaker", "MMConfig",
+    "SessionStats",
 ]
