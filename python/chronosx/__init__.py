@@ -17,6 +17,10 @@ from .market_data import MarketDataPublisher, BookSnapshot, TradeReport, PriceLe
 from .position_manager import PositionManager, Position, Fill
 from .market_maker import MarketMaker, MMConfig
 from .stats import SessionStats
+from .latency_profiler import LatencyProfiler, LatencyStats
+from .twap import TwapExecutor, TwapConfig, TwapState, TwapStatus
+from .audit_log import AuditLog
+from .exchange import Exchange, InstrumentInfo, InstrumentSession
 
 __all__ = [
     "PRICE_MULT", "INVALID_ORDER_ID", "INVALID_PRICE",
@@ -35,4 +39,8 @@ __all__ = [
     "PositionManager", "Position", "Fill",
     "MarketMaker", "MMConfig",
     "SessionStats",
+    "LatencyProfiler", "LatencyStats",
+    "TwapExecutor", "TwapConfig", "TwapState", "TwapStatus",
+    "AuditLog",
+    "Exchange", "InstrumentInfo", "InstrumentSession",
 ]
