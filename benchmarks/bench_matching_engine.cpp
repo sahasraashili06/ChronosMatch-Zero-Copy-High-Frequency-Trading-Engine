@@ -40,7 +40,7 @@ BENCHMARK(BM_LimitOrderInsert);
 static void BM_LimitOrderMatchOneToOne(benchmark::State& state) {
     for (auto _ : state) {
         MatchingEngine engine;
-        engine.submit_limit(1, Side::Sell, 100'000, 100);
+        (void)engine.submit_limit(1, Side::Sell, 100'000, 100);
         benchmark::DoNotOptimize(
             engine.submit_limit(2, Side::Buy, 100'000, 100)
         );
@@ -58,7 +58,7 @@ static void BM_MarketOrderSweep10Levels(benchmark::State& state) {
         state.PauseTiming();
         MatchingEngine engine;
         for (int i = 0; i < 10; ++i) {
-            engine.submit_limit(
+            (void)engine.submit_limit(
                 static_cast<OrderId>(i + 1),
                 Side::Sell,
                 static_cast<Price>(100'000 + i * 100),
@@ -85,7 +85,7 @@ static void BM_CancelOrder(benchmark::State& state) {
 
     // Pre-populate with buy orders at different prices
     for (int i = 0; i < kOrders; ++i) {
-        engine.submit_limit(
+        (void)engine.submit_limit(
             static_cast<OrderId>(i + 1),
             Side::Buy,
             static_cast<Price>(100'000 - i),
