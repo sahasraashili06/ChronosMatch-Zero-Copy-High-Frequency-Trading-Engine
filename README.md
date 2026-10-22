@@ -1,8 +1,9 @@
 # ChronosX — Zero-Copy HFT Matching Engine
 
-> A from-scratch, cache-optimised, C++20 limit order book and matching engine built for portfolio demonstration purposes. It operates entirely in simulation mode — no live exchange connections.
+> A from-scratch, cache-optimised **Python** limit order book and matching engine built for portfolio demonstration. Operates entirely in simulation mode — no live exchange connections.
 
 [![CI](https://github.com/sahasraashili06/ChronosMatch-Zero-Copy-High-Frequency-Trading-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/sahasraashili06/ChronosMatch-Zero-Copy-High-Frequency-Trading-Engine/actions)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python)
 
 ---
 

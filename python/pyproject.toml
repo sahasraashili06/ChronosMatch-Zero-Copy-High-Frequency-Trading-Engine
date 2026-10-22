@@ -1,0 +1,23 @@
+[build-system]
+requires      = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name        = "chronosx"
+version     = "1.0.0"
+description = "Zero-Copy HFT Matching Engine Simulator — Python Edition"
+readme      = "README.md"
+requires-python = ">=3.11"
+license     = { text = "MIT" }
+dependencies = ["sortedcontainers>=2.4.0"]
+
+[project.scripts]
+chronosx = "main:main"
+
+[tool.pytest.ini_options]
+testpaths    = ["tests"]
+addopts      = "-v --tb=short"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["chronosx*"]

@@ -1,0 +1,12 @@
+# Tell GitHub Linguist to ignore C++ source so Python is the detected language.
+# The C++ code is kept for reference but the primary implementation is Python.
+
+# Exclude C++ sources from language stats
+src/*.cpp        linguist-vendored
+include/**/*.hpp linguist-vendored
+benchmarks/*.cpp linguist-vendored
+tests/*.cpp      linguist-vendored
+
+# Ensure Python files are counted
+python/**/*.py   linguist-detectable=true
+python/**/*.py   linguist-language=Python
