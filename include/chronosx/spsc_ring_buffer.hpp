@@ -52,6 +52,10 @@
 #include <type_traits>
 
 namespace chronosx {
+    #ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4324)
+#endif
 
 template <typename T, std::size_t Capacity>
 class SpscRingBuffer {
@@ -148,5 +152,7 @@ private:
     // Ring buffer storage
     T buffer_[Capacity]{};
 };
-
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 } // namespace chronosx

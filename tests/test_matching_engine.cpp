@@ -1,3 +1,4 @@
+
 #include <gtest/gtest.h>
 #include "chronosx/matching_engine.hpp"
 
@@ -40,7 +41,7 @@ TEST_F(MatchingEngineTest, LimitBuyBelowBestAskDoesNotMatch) {
 // ============================================================
 
 TEST_F(MatchingEngineTest, ExactFillOneSellOneBy) {
-    engine.submit_limit(1, Side::Sell, 1000, 50);
+    (void)engine.submit_limit(1, Side::Sell, 1000, 50);
     auto r = engine.submit_limit(2, Side::Buy, 1000, 50);
 
     ASSERT_EQ(r.trades.size(), 1u);
@@ -64,7 +65,7 @@ TEST_F(MatchingEngineTest, ExecutionAtRestingPrice_MakerPrice) {
 // ============================================================
 
 TEST_F(MatchingEngineTest, AggressorPartiallyFillsAndRests) {
-    engine.submit_limit(1, Side::Sell, 1000, 30);
+    (void)engine.submit_limit(1, Side::Sell, 1000, 30);
     auto r = engine.submit_limit(2, Side::Buy, 1000, 50);
 
     ASSERT_EQ(r.trades.size(), 1u);
@@ -76,7 +77,7 @@ TEST_F(MatchingEngineTest, AggressorPartiallyFillsAndRests) {
 }
 
 TEST_F(MatchingEngineTest, RestingOrderPartiallyFilled) {
-    engine.submit_limit(1, Side::Sell, 1000, 50);
+    (void)engine.submit_limit(1, Side::Sell, 1000, 50);
     auto r = engine.submit_limit(2, Side::Buy, 1000, 20);
 
     ASSERT_EQ(r.trades.size(), 1u);
@@ -121,7 +122,7 @@ TEST_F(MatchingEngineTest, FIFOWithinPriceLevel) {
 // ============================================================
 
 TEST_F(MatchingEngineTest, MarketOrderFullFill) {
-    engine.submit_limit(1, Side::Sell, 1000, 50);
+    (void)engine.submit_limit(1, Side::Sell, 1000, 50);
     auto r = engine.submit_market(2, Side::Buy, 50);
 
     ASSERT_EQ(r.trades.size(), 1u);
@@ -130,7 +131,7 @@ TEST_F(MatchingEngineTest, MarketOrderFullFill) {
 }
 
 TEST_F(MatchingEngineTest, MarketOrderIOCCancelsResidual) {
-    engine.submit_limit(1, Side::Sell, 1000, 20);
+    (void)engine.submit_limit(1, Side::Sell, 1000, 20);
     auto r = engine.submit_market(2, Side::Buy, 50);
 
     ASSERT_EQ(r.trades.size(), 1u);
@@ -153,7 +154,7 @@ TEST_F(MatchingEngineTest, MarketOrderOnEmptyBookCancelled) {
 // ============================================================
 
 TEST_F(MatchingEngineTest, CancelRestingOrder) {
-    engine.submit_limit(1, Side::Buy, 1000, 100);
+    (void)engine.submit_limit(1, Side::Buy, 1000, 100);
     auto r = engine.cancel_order(1);
     EXPECT_TRUE(r.cancel_event.has_value());
     EXPECT_EQ(r.cancel_event->order_id, OrderId{1});
@@ -181,10 +182,12 @@ TEST_F(MatchingEngineTest, CancelThenMatchDoesNotUseRemovedOrder) {
 
 TEST_F(MatchingEngineTest, NoCrossedBookAfterMatch) {
     (void)engine.submit_limit(1, Side::Sell, 1000, 20);
-    (void)engine.submit_limit(2, Side::Buy,  1000, 30);
+    (void)engine.submit_limit(2, Side::Buy, 1000, 30);
     auto bb = engine.book().best_bid();
     auto ba = engine.book().best_ask();
-    if (bb && ba) { EXPECT_LT(*bb, *ba); }
+    if (bb && ba) {
+        EXPECT_LT(*bb, *ba);
+    }
 }
 
 TEST_F(MatchingEngineTest, SeqCounterMonotonicallyIncreases) {

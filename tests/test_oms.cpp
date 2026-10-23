@@ -1,3 +1,4 @@
+
 #include <gtest/gtest.h>
 #include "chronosx/oms.hpp"
 #include "chronosx/risk_engine.hpp"
@@ -39,13 +40,15 @@ TEST_F(OmsTest, SubmitSetsStatusNew) {
                             .price=1000, .qty=10});
     auto status = oms.get_status(resp.assigned_id);
     ASSERT_TRUE(status.has_value());
-    // New order with no counterpart rests in the book
+    // New order with no counterpart rests in the book.
     EXPECT_EQ(*status, OrderStatus::New);
 }
 
 TEST_F(OmsTest, SubmitMatchingOrdersResultInFilled) {
-    oms.submit({.id=1, .side=Side::Sell, .type=OrderType::Limit, .price=1000, .qty=50});
-    auto r2 = oms.submit({.id=2, .side=Side::Buy,  .type=OrderType::Limit, .price=1000, .qty=50});
+    (void)oms.submit({.id=1, .side=Side::Sell, .type=OrderType::Limit,
+                      .price=1000, .qty=50});
+    auto r2 = oms.submit({.id=2, .side=Side::Buy, .type=OrderType::Limit,
+                          .price=1000, .qty=50});
     EXPECT_EQ(*oms.get_status(2), OrderStatus::Filled);
     ASSERT_EQ(r2.match_result.trades.size(), 1u);
 }
@@ -66,8 +69,10 @@ TEST_F(OmsTest, NonPositiveLimitPriceIsRejected) {
 }
 
 TEST_F(OmsTest, DuplicateIdIsRejected) {
-    oms.submit({.id=7, .side=Side::Buy, .type=OrderType::Limit, .price=1000, .qty=10});
-    auto r = oms.submit({.id=7, .side=Side::Buy, .type=OrderType::Limit, .price=1000, .qty=10});
+    (void)oms.submit({.id=7, .side=Side::Buy, .type=OrderType::Limit,
+                      .price=1000, .qty=10});
+    auto r = oms.submit({.id=7, .side=Side::Buy, .type=OrderType::Limit,
+                         .price=1000, .qty=10});
     EXPECT_EQ(r.match_result.final_status, OrderStatus::Rejected);
 }
 
@@ -95,9 +100,11 @@ TEST_F(OmsTest, CancelNonExistentIdIsRejected) {
 }
 
 TEST_F(OmsTest, CancelAlreadyFilledOrderIsRejected) {
-    oms.submit({.id=1, .side=Side::Sell, .type=OrderType::Limit, .price=1000, .qty=10});
-    oms.submit({.id=2, .side=Side::Buy,  .type=OrderType::Limit, .price=1000, .qty=10});
-    // Order 1 is now Filled — cannot cancel
+    (void)oms.submit({.id=1, .side=Side::Sell, .type=OrderType::Limit,
+                      .price=1000, .qty=10});
+    (void)oms.submit({.id=2, .side=Side::Buy, .type=OrderType::Limit,
+                      .price=1000, .qty=10});
+    // Order 1 is now Filled — cannot cancel.
     auto r = oms.cancel(1);
     EXPECT_NE(r.match_result.final_status, OrderStatus::Cancelled);
 }
@@ -112,7 +119,8 @@ TEST_F(OmsTest, GetStatusReturnsNulloptForUnknownId) {
 // ---- Market order via OMS ----
 
 TEST_F(OmsTest, MarketOrderDispatchedToEngine) {
-    oms.submit({.id=1, .side=Side::Sell, .type=OrderType::Limit, .price=1000, .qty=20});
+    (void)oms.submit({.id=1, .side=Side::Sell, .type=OrderType::Limit,
+                      .price=1000, .qty=20});
     auto r = oms.submit({.id=2, .side=Side::Buy, .type=OrderType::Market,
                          .price=0, .qty=20});
     ASSERT_EQ(r.match_result.trades.size(), 1u);
