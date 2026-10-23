@@ -234,3 +234,14 @@ See [`docs/REFERENCE_ANALYSIS.md`](docs/REFERENCE_ANALYSIS.md) for the full anal
 ## License
 
 MIT — see [`LICENSE`](LICENSE) for details.
+## Development and Testing
+
+ChronosMatch demonstrates order-book management, order matching, and trade execution in a simulated trading environment.
+
+### Run Python Tests
+
+From the project root, run:
+
+    python -m pytest ./python/tests -v
+
+This project is for educational purposes only and is not intended for live trading or financial advice.
