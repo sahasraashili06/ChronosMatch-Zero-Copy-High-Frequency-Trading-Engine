@@ -27,6 +27,10 @@
 #include <type_traits>
 
 namespace chronosx {
+    #ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4324)
+#endif
 
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -139,5 +143,8 @@ private:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
+
+
+
 
 } // namespace chronosx

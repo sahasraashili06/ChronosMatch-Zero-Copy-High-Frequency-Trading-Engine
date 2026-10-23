@@ -118,6 +118,7 @@ TEST_F(OmsTest, CancelNonExistentIdIsRejected) {
 }
 
 TEST_F(OmsTest, CancelAlreadyFilledOrderIsRejected) {
+
     auto sell = oms.submit({.id=1, .side=Side::Sell, .type=OrderType::Limit,
                             .price=1000, .qty=10});
     EXPECT_EQ(sell.match_result.final_status, OrderStatus::New);
@@ -127,6 +128,7 @@ TEST_F(OmsTest, CancelAlreadyFilledOrderIsRejected) {
     EXPECT_EQ(buy.match_result.final_status, OrderStatus::Filled);
 
     // Order 1 is now Filled — it cannot be cancelled.
+
     auto r = oms.cancel(1);
 
     EXPECT_NE(r.match_result.final_status, OrderStatus::Cancelled);
