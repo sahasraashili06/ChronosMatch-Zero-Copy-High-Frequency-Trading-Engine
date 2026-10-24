@@ -14,8 +14,3 @@ Keep compiler settings and test conditions consistent.
 Record the workload size, number of trials, and environment details.
 Compare latency and throughput using the same test conditions.
 Document unusual results instead of silently removing them.
-## Benchmark Environment
-
-Record the operating system, compiler version, build mode, and hardware details.
-Use the same environment when comparing benchmark results.
-Keep raw measurements available for later verification.
