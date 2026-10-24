@@ -45,8 +45,10 @@ TEST_F(MatchingEngineTest, LimitBuyBelowBestAskDoesNotMatch) {
 // ============================================================
 
 TEST_F(MatchingEngineTest, ExactFillOneSellOneBy) {
+
     auto resting = engine.submit_limit(1, Side::Sell, 1000, 50);
     EXPECT_EQ(resting.final_status, OrderStatus::New);
+
 
     auto r = engine.submit_limit(2, Side::Buy, 1000, 50);
 
