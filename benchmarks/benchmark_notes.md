@@ -19,3 +19,6 @@ Document unusual results instead of silently removing them.
 Record the operating system, compiler version, build mode, and hardware details.
 Use the same environment when comparing benchmark results.
 Keep raw measurements available for later verification.
+## Performance Validation
+
+Verify benchmark results across multiple runs before reporting performance changes. Investigate unexpected latency spikes and throughput variations, and document reproducible findings with the relevant test configuration.
