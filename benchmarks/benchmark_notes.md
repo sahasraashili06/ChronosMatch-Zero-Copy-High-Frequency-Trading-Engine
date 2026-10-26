@@ -22,3 +22,6 @@ Keep raw measurements available for later verification.
 ## Performance Validation
 
 Verify benchmark results across multiple runs before reporting performance changes. Investigate unexpected latency spikes and throughput variations, and document reproducible findings with the relevant test configuration.
+## Regression Analysis
+
+Compare new benchmark measurements with previous baseline results. Investigate significant performance regressions before accepting changes, and record the suspected cause and validation outcome for future reference.
