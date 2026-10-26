@@ -14,3 +14,6 @@ Keep compiler settings and test conditions consistent.
 Record the workload size, number of trials, and environment details.
 Compare latency and throughput using the same test conditions.
 Document unusual results instead of silently removing them.
+## Regression Analysis
+
+Compare new benchmark measurements with previous baseline results. Investigate significant performance regressions before accepting changes, and record the suspected cause and validation outcome for future reference.
