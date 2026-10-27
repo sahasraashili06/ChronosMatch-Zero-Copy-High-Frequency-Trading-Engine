@@ -25,3 +25,6 @@ Verify benchmark results across multiple runs before reporting performance chang
 ## Regression Analysis
 
 Compare new benchmark measurements with previous baseline results. Investigate significant performance regressions before accepting changes, and record the suspected cause and validation outcome for future reference.
+## Benchmark Reproducibility
+
+Store benchmark inputs, compiler flags, and system configuration alongside each result. Repeat tests under equivalent conditions to confirm that performance differences are reproducible and not caused by environmental variation.
