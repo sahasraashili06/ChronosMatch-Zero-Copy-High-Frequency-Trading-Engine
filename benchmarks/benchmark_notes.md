@@ -28,3 +28,6 @@ Compare new benchmark measurements with previous baseline results. Investigate s
 ## Benchmark Reproducibility
 
 Store benchmark inputs, compiler flags, and system configuration alongside each result. Repeat tests under equivalent conditions to confirm that performance differences are reproducible and not caused by environmental variation.
+## Benchmark Result Checklist
+
+Before publishing results, verify that all trials completed successfully, record failed or incomplete runs, and include the measurement units. Review the collected data for inconsistencies before comparing performance across revisions.
