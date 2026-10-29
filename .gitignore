@@ -49,9 +49,3 @@ Thumbs.db
 # Python
 __pycache__/
 *.pyc
-
-.env
-chronosmatch.db
-
-.venv/
-order_book_changes.txt
