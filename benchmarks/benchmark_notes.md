@@ -31,3 +31,6 @@ Store benchmark inputs, compiler flags, and system configuration alongside each 
 ## Benchmark Result Checklist
 
 Before publishing results, verify that all trials completed successfully, record failed or incomplete runs, and include the measurement units. Review the collected data for inconsistencies before comparing performance across revisions.
+## Benchmark Data Integrity
+
+Preserve the original benchmark output alongside summarized results. Record any missing measurements and explain data exclusions so that performance comparisons remain transparent and can be independently reviewed.
