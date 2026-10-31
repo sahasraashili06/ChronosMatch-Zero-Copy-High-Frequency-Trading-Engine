@@ -34,3 +34,17 @@ Before publishing results, verify that all trials completed successfully, record
 ## Benchmark Data Integrity
 
 Preserve the original benchmark output alongside summarized results. Record any missing measurements and explain data exclusions so that performance comparisons remain transparent and can be independently reviewed.
+## Benchmark Execution Record Template
+
+Use this template to maintain a consistent record for each benchmark run.
+
+| Field | Recorded Value |
+|---|---|
+| Run Date | YYYY-MM-DD |
+| Commit ID | Git commit hash |
+| Workload | Input workload description |
+| Iterations | Number of test iterations |
+| Throughput | Operations per second |
+| Latency | Measured latency |
+| Build Mode | Debug or Release |
+| Notes | Observations and anomalies |
