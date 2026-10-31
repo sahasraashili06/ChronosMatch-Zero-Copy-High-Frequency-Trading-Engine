@@ -1,88 +1,118 @@
-"""Tests for LatencyProfiler"""
-import time
+"""Tests for LatencyProfiler."""
 import pytest
-from chronosx.latency_profiler import LatencyProfiler, LatencyStats
+from chronosx.latency_profiler import LatencyProfiler, LatencySample, LatencyStats
 
 
 @pytest.fixture
 def prof():
-    return LatencyProfiler()
+    return LatencyProfiler(alert_multiplier=5.0, max_samples=100)
 
 
-def test_no_samples_returns_none(prof):
-    assert prof.stats("missing") is None
-    assert prof.percentile("missing", 50) is None
+def test_start_stop_returns_sample(prof):
+    prof.start("ev1")
+    sample = prof.stop("ev1")
+    assert sample is not None
+    assert sample.event_id == "ev1"
+    assert sample.latency_ns > 0
 
 
-def test_context_manager_records_sample(prof):
-    with prof.measure("op"):
-        time.sleep(0.001)   # 1ms
-    assert prof.sample_count("op") == 1
+def test_stop_unknown_returns_none(prof):
+    assert prof.stop("nonexistent") is None
 
 
-def test_manual_record(prof):
-    t0 = prof.start()
-    time.sleep(0.0001)
-    elapsed = prof.record("op", t0)
-    assert elapsed > 0
-    assert prof.sample_count("op") == 1
+def test_sample_count_increments(prof):
+    for i in range(5):
+        prof.start(f"e{i}"); prof.stop(f"e{i}")
+    assert prof.sample_count == 5
 
 
-def test_add_sample(prof):
-    prof.add_sample("op", 500)
-    prof.add_sample("op", 1000)
-    assert prof.sample_count("op") == 2
+def test_pending_count(prof):
+    prof.start("a"); prof.start("b")
+    assert prof.pending_count == 2
+    prof.stop("a")
+    assert prof.pending_count == 1
 
 
-def test_stats_computed_correctly(prof):
-    for ns in [100, 200, 300, 400, 500]:
-        prof.add_sample("op", ns)
-    st = prof.stats("op")
-    assert st is not None
-    assert st.count   == 5
-    assert st.min_ns  == 100
-    assert st.max_ns  == 500
-    assert st.mean_ns == 300.0
+def test_record_ns_direct(prof):
+    sample = prof.record_ns("hw_event", 50_000)
+    assert sample.latency_ns == 50_000
+    assert sample.latency_us == pytest.approx(50.0, abs=0.1)
 
 
-def test_p50_in_range(prof):
-    for i in range(1, 101):
-        prof.add_sample("op", i * 100)
-    p50 = prof.percentile("op", 50)
-    assert p50 is not None
-    assert 4900 <= p50 <= 5100
+def test_record_ns_counted(prof):
+    for i in range(10):
+        prof.record_ns(f"e{i}", 1_000 * (i + 1))
+    assert prof.sample_count == 10
 
 
-def test_p99_higher_than_p50(prof):
+def test_stats_none_before_samples(prof):
+    assert prof.stats() is None
+
+
+def test_stats_min_max(prof):
+    prof.record_ns("a", 1_000); prof.record_ns("b", 9_000)
+    st = prof.stats()
+    assert st.min_ns == 1_000
+    assert st.max_ns == 9_000
+
+
+def test_stats_mean(prof):
+    for ns in [1_000, 2_000, 3_000]:
+        prof.record_ns("x", ns)
+    st = prof.stats()
+    assert st.mean_ns == pytest.approx(2_000.0, abs=1.0)
+
+
+def test_stats_p50(prof):
+    for i in range(1, 11):
+        prof.record_ns(f"e{i}", i * 1_000)
+    st = prof.stats()
+    assert 5_000 <= st.p50_ns <= 7_000
+
+
+def test_stats_p99_larger_than_p50(prof):
     for i in range(100):
-        prof.add_sample("op", i)
-    p50 = prof.percentile("op", 50)
-    p99 = prof.percentile("op", 99)
-    assert p99 > p50  # type: ignore
+        prof.record_ns(f"e{i}", (i + 1) * 100)
+    st = prof.stats()
+    assert st.p99_ns >= st.p50_ns
 
 
-def test_multiple_operations_tracked_separately(prof):
-    prof.add_sample("submit", 1000)
-    prof.add_sample("cancel", 500)
-    assert prof.sample_count("submit") == 1
-    assert prof.sample_count("cancel") == 1
+def test_latency_units(prof):
+    prof.record_ns("u", 2_500_000)
+    st = prof.stats()
+    assert st.mean_us == pytest.approx(2_500.0, abs=1.0)
 
 
-def test_reset_single_op(prof):
-    prof.add_sample("op", 100)
-    prof.reset("op")
-    assert prof.sample_count("op") == 0
+def test_slow_sample_triggers_alert(prof):
+    for _ in range(10):
+        prof.record_ns("base", 1_000)
+    prof.record_ns("spike", 100_000)
+    assert prof.alert_count == 1
 
 
-def test_reset_all(prof):
-    prof.add_sample("a", 100)
-    prof.add_sample("b", 200)
+def test_normal_samples_no_alert(prof):
+    for i in range(20):
+        prof.record_ns(f"e{i}", 1_000)
+    assert prof.alert_count == 0
+
+
+def test_reset_clears_all(prof):
+    prof.record_ns("x", 1_000)
     prof.reset()
-    assert prof.all_names() == []
+    assert prof.sample_count == 0
+    assert prof.stats() is None
 
 
-def test_report_string_not_empty(prof):
-    prof.add_sample("op", 1000)
-    r = prof.report("op")
-    assert "op" in r
-    assert "n=1" in r
+def test_invalid_multiplier_raises():
+    with pytest.raises(ValueError):
+        LatencyProfiler(alert_multiplier=0)
+
+
+def test_str_sample(prof):
+    s = prof.record_ns("test", 50_000)
+    assert "LatencySample" in str(s)
+
+
+def test_summary_string(prof):
+    prof.record_ns("x", 1_000)
+    assert "Latency" in prof.summary()
