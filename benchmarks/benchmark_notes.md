@@ -48,3 +48,6 @@ Use this template to maintain a consistent record for each benchmark run.
 | Latency | Measured latency |
 | Build Mode | Debug or Release |
 | Notes | Observations and anomalies |
+## Benchmark Troubleshooting Guide
+
+If benchmark results vary unexpectedly, verify the input workload, system load, compiler configuration, and build mode. Repeat the test under consistent conditions and document any environmental factors that may affect the measurements.
