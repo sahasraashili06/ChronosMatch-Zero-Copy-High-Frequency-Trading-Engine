@@ -37,6 +37,9 @@ class MmapRingBuffer:
         self.capacity = capacity
         self.size = HEADER.size + capacity * ORDER.size
 
+        self._file = None
+        self._map = None
+
         if create:
             with open(path, "w+b") as f:
                 f.truncate(self.size)
@@ -44,7 +47,7 @@ class MmapRingBuffer:
         self._file = open(path, "r+b")
 
         if os.path.getsize(path) != self.size:
-            self._file.close()
+            self.close()
             raise ValueError(
                 "Shared file size does not match the requested capacity"
             )
@@ -53,11 +56,27 @@ class MmapRingBuffer:
 
         if create:
             HEADER.pack_into(self._map, 0, 0, 0, capacity)
+
         else:
-            _, _, stored_capacity = HEADER.unpack_from(self._map, 0)
+            head, tail, stored_capacity = HEADER.unpack_from(
+                self._map, 0
+            )
+
             if stored_capacity != capacity:
                 self.close()
                 raise ValueError("Ring buffer capacity mismatch")
+
+            if head > tail:
+                self.close()
+                raise ValueError(
+                    "Corrupted ring buffer: head exceeds tail"
+                )
+
+            if tail - head > capacity:
+                self.close()
+                raise ValueError(
+                    "Corrupted ring buffer: occupancy exceeds capacity"
+                )
 
     def push(
         self,
@@ -68,15 +87,20 @@ class MmapRingBuffer:
     ) -> bool:
         if side not in (-1, 1):
             raise ValueError("side must be 1 (BUY) or -1 (SELL)")
+
         if not 0 <= order_id < 2**64:
             raise ValueError("order_id must fit in uint64")
+
         if not -(2**63) <= price_ticks < 2**63:
             raise ValueError("price_ticks must fit in int64")
+
         if not 0 <= quantity < 2**64:
             raise ValueError("quantity must fit in uint64")
 
         with self.lock:
-            head, tail, capacity = HEADER.unpack_from(self._map, 0)
+            head, tail, capacity = HEADER.unpack_from(
+                self._map, 0
+            )
 
             if tail - head >= capacity:
                 return False
@@ -94,13 +118,20 @@ class MmapRingBuffer:
             )
 
             HEADER.pack_into(
-                self._map, 0, head, tail + 1, capacity
+                self._map,
+                0,
+                head,
+                tail + 1,
+                capacity,
             )
+
             return True
 
     def pop(self) -> Optional[dict]:
         with self.lock:
-            head, tail, capacity = HEADER.unpack_from(self._map, 0)
+            head, tail, capacity = HEADER.unpack_from(
+                self._map, 0
+            )
 
             if head == tail:
                 return None
@@ -113,7 +144,11 @@ class MmapRingBuffer:
             )
 
             HEADER.pack_into(
-                self._map, 0, head + 1, tail, capacity
+                self._map,
+                0,
+                head + 1,
+                tail,
+                capacity,
             )
 
             return {
