@@ -54,3 +54,6 @@ If benchmark results vary unexpectedly, verify the input workload, system load, 
 Benchmark Result Interpretation
 
 Interpret benchmark results using consistent measurement units and comparable workloads. Review average and median latency to understand typical execution time, and examine throughput across repeated trials. Investigate large variations before drawing conclusions. Compare results with the same baseline configuration and report performance changes only when supported by recorded measurements.
+## Benchmark Comparison Methodology
+
+Compare benchmark results using identical workloads, compiler settings, and system configurations. Record baseline and updated measurements separately. Evaluate throughput and latency changes across multiple trials before identifying performance improvements or regressions.
