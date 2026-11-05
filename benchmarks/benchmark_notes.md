@@ -57,3 +57,6 @@ Interpret benchmark results using consistent measurement units and comparable wo
 ## Benchmark Comparison Methodology
 
 Compare benchmark results using identical workloads, compiler settings, and system configurations. Record baseline and updated measurements separately. Evaluate throughput and latency changes across multiple trials before identifying performance improvements or regressions.
+## Benchmark Test Limitations
+
+Benchmark results may be affected by system load, hardware differences, background processes, and compiler settings. Document these limitations when reporting results to avoid misleading performance comparisons.
