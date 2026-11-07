@@ -60,3 +60,6 @@ Compare benchmark results using identical workloads, compiler settings, and syst
 ## Benchmark Test Limitations
 
 Benchmark results may be affected by system load, hardware differences, background processes, and compiler settings. Document these limitations when reporting results to avoid misleading performance comparisons.
+## Benchmark Resource Monitoring
+
+Monitor CPU utilization and memory consumption during benchmark execution. Record resource usage alongside latency and throughput measurements. Keep system conditions consistent across test runs to identify resource-related performance variations.
