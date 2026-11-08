@@ -63,3 +63,6 @@ Benchmark results may be affected by system load, hardware differences, backgrou
 ## Benchmark Resource Monitoring
 
 Monitor CPU utilization and memory consumption during benchmark execution. Record resource usage alongside latency and throughput measurements. Keep system conditions consistent across test runs to identify resource-related performance variations.
+## Benchmark Performance Metrics
+
+Track throughput, average latency, median latency, and memory usage for each benchmark run. Use consistent measurement units and record the test configuration to support accurate performance comparisons across different revisions.
