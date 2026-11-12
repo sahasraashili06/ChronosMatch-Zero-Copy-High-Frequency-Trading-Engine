@@ -1,5 +1,5 @@
-"""
-ChronosX — SPSC Ring Buffer
+﻿"""
+ChronosX ΓÇö SPSC Ring Buffer
 
 Single-Producer Single-Consumer lock-free queue backed by a fixed-size list.
 Thread-safe for exactly one writer thread and one reader thread.
@@ -37,12 +37,12 @@ class SpscRingBuffer(Generic[T]):
         self._capacity: int          = capacity
         self._mask:     int          = capacity - 1
         self._buf:      list[Any]    = [None] * capacity
-        # Monotonic counters — never wrap (Python ints are unbounded)
+        # Monotonic counters ΓÇö never wrap (Python ints are unbounded)
         self._head:     int = 0   # next slot to read  (consumer writes)
         self._tail:     int = 0   # next slot to write (producer writes)
         self._lock:     threading.Lock = threading.Lock()  # guards _tail/_head
 
-    # ── Properties ────────────────────────────────────────────────────────────
+    # ΓöÇΓöÇ Properties ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     @property
     def capacity(self) -> int:
@@ -60,7 +60,7 @@ class SpscRingBuffer(Generic[T]):
         with self._lock:
             return self._tail - self._head
 
-    # ── Core operations ──────────────────────────────────────────────────────
+    # ΓöÇΓöÇ Core operations ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     def push(self, item: T) -> bool:
         """

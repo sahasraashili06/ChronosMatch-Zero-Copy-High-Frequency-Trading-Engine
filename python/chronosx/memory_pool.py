@@ -1,12 +1,12 @@
-"""
-ChronosX — ObjectPool
+﻿"""
+ChronosX ΓÇö ObjectPool
 
 Pre-allocates N Order slots and hands them out via a free-list.
 Alloc and free are O(1).  No heap allocation after __init__.
 
 In Python we can't avoid object creation costs the way C++ can with
 placement new, but we reuse the same Order objects by resetting their
-fields — zero calls to the allocator after warmup.
+fields ΓÇö zero calls to the allocator after warmup.
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ class ObjectPool:
         self._slots:    list[Order] = [Order() for _ in range(capacity)]
         self._free:     deque[int]  = deque(range(capacity))
 
-    # ── Properties ────────────────────────────────────────────────────────────
+    # ΓöÇΓöÇ Properties ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     @property
     def capacity(self) -> int:
@@ -53,7 +53,7 @@ class ObjectPool:
     def is_full(self) -> bool:
         return len(self._free) == 0
 
-    # ── Core operations ──────────────────────────────────────────────────────
+    # ΓöÇΓöÇ Core operations ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     def alloc(self) -> Optional[tuple[int, Order]]:
         """

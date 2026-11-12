@@ -1,5 +1,5 @@
-"""
-ChronosX — Simulator
+﻿"""
+ChronosX ΓÇö Simulator
 
 Runs deterministic scenario replays and a live SPSC throughput demo.
 """
@@ -38,7 +38,7 @@ class Simulator:
         self._risk = RiskEngine()
         self._oms  = OrderManagementSystem(self._risk)
 
-    # ── Scenario replay ───────────────────────────────────────────────────────
+    # ΓöÇΓöÇ Scenario replay ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     def run_scenario(self, events: List[ScenarioEvent]) -> List[OmsResponse]:
         results: List[OmsResponse] = []
@@ -49,7 +49,7 @@ class Simulator:
                 results.append(self._oms.cancel(ev.cancel_id))
         return results
 
-    # ── SPSC throughput demo ──────────────────────────────────────────────────
+    # ΓöÇΓöÇ SPSC throughput demo ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     def run_spsc_demo(self, num_events: int = 100_000) -> float:
         """Returns throughput in orders/second."""
@@ -97,7 +97,7 @@ class Simulator:
         elapsed = t_end - t_start
         return consumed[0] / elapsed if elapsed > 0 else 0.0
 
-    # ── Reporting helpers ─────────────────────────────────────────────────────
+    # ΓöÇΓöÇ Reporting helpers ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     def print_summary(self) -> None:
         book = self._oms.book

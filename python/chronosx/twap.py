@@ -14,7 +14,7 @@ one slice per time interval, minimising market impact.
       (qty=100)  (qty=100)   (qty=100)
       t=0s       t=1s         t=9s
 
-This is simulation-only — slices are submitted synchronously
+This is simulation-only -- slices are submitted synchronously
 when you call .tick(), so you control the clock.
 """
 from __future__ import annotations
@@ -102,7 +102,7 @@ class TwapExecutor:
     """
     Manages one or more TWAP jobs against a shared OMS.
 
-    Usage (simulation — you drive the clock with .tick()):
+    Usage (simulation -- you drive the clock with .tick()):
 
         oms  = OrderManagementSystem(risk)
         exec = TwapExecutor(oms, next_order_id=5000)
@@ -125,10 +125,10 @@ class TwapExecutor:
         self._next_id  = next_order_id
         self._jobs:    dict[int, TwapStatus] = {}
 
-    # ── Job lifecycle ─────────────────────────────────────────────────────────
+    # ---- Job lifecycle -------------------------------------------------------
 
     def create(self, cfg: TwapConfig) -> int:
-        """Register a TWAP config. Returns *cfg.parent_id*."""
+        """Register a TWAP config. Returns cfg.parent_id."""
         self._jobs[cfg.parent_id] = TwapStatus(config=cfg)
         return cfg.parent_id
 
@@ -148,11 +148,11 @@ class TwapExecutor:
     def all_jobs(self) -> List[TwapStatus]:
         return list(self._jobs.values())
 
-    # ── Clock tick ────────────────────────────────────────────────────────────
+    # ---- Clock tick ---------------------------------------------------------
 
     def tick(self, job_id: int) -> Optional[OmsResponse]:
         """
-        Advance one time step for *job_id*.
+        Advance one time step for job_id.
         Submits the next child slice if the job is running and has slices left.
         Returns the OmsResponse for the child order, or None.
         """
@@ -211,7 +211,7 @@ class TwapExecutor:
                 results.append(r)
         return results
 
-    # ── Internal ──────────────────────────────────────────────────────────────
+    # ---- Internal -----------------------------------------------------------
 
     def _complete(self, job: TwapStatus) -> None:
         job.state          = TwapState.Completed

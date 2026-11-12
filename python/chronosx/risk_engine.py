@@ -1,5 +1,5 @@
-"""
-ChronosX — RiskEngine
+﻿"""
+ChronosX ΓÇö RiskEngine
 
 Pre-trade risk checks applied to every incoming order before it touches
 the matching engine. Checks quantity and notional value limits.
@@ -37,12 +37,12 @@ class RiskEngine:
         return self._limits
 
     def check_order(self, side: Side, price: int, qty: int) -> RiskResult:
-        # ── Check 1: Quantity limit ──────────────────────────────────────────
+        # ΓöÇΓöÇ Check 1: Quantity limit ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
         if qty > self._limits.max_order_qty:
             return RiskResult.RejectedQty
 
-        # ── Check 2: Notional limit (price × qty) ───────────────────────────
-        # Python ints are arbitrary precision — no overflow risk.
+        # ΓöÇΓöÇ Check 2: Notional limit (price ├ù qty) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+        # Python ints are arbitrary precision ΓÇö no overflow risk.
         if price > 0:
             notional = price * qty
             if notional > self._limits.max_order_notional:

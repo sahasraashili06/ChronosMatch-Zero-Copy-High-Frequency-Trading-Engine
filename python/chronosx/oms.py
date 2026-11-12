@@ -1,5 +1,5 @@
-"""
-ChronosX — OrderManagementSystem (OMS)
+﻿"""
+ChronosX ΓÇö OrderManagementSystem (OMS)
 
 Sits above the MatchingEngine and RiskEngine.
 Assigns sequence IDs, runs pre-trade risk checks, and tracks live orders.
@@ -51,7 +51,7 @@ class OrderManagementSystem:
         self._seq:    int = 0
         self._orders: Dict[int, OrderStatus] = {}
 
-    # ── Properties ────────────────────────────────────────────────────────────
+    # ΓöÇΓöÇ Properties ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     @property
     def order_count(self) -> int:
@@ -61,7 +61,7 @@ class OrderManagementSystem:
     def book(self):  # -> OrderBook
         return self._engine.book
 
-    # ── Public API ────────────────────────────────────────────────────────────
+    # ΓöÇΓöÇ Public API ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
     def submit(self, req: OrderRequest) -> OmsResponse:
         # 1. Pre-trade risk check
