@@ -14,7 +14,7 @@ Keep compiler settings and test conditions consistent.
 Record the workload size, number of trials, and environment details.
 Compare latency and throughput using the same test conditions.
 Document unusual results instead of silently removing them.
-## Benchmark Environment
+## Regression Analysis
 
 Record the operating system, compiler version, build mode, and hardware details.
 Use the same environment when comparing benchmark results.
@@ -66,3 +66,4 @@ Monitor CPU utilization and memory consumption during benchmark execution. Recor
 ## Benchmark Performance Metrics
 
 Track throughput, average latency, median latency, and memory usage for each benchmark run. Use consistent measurement units and record the test configuration to support accurate performance comparisons across different revisions.
+Compare new benchmark measurements with previous baseline results. Investigate significant performance regressions before accepting changes, and record the suspected cause and validation outcome for future reference.

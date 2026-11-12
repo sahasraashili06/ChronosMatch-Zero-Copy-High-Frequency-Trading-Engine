@@ -74,13 +74,13 @@ double Simulator::run_spsc_demo(std::size_t num_events) {
     OrderRequest req{};
     while (!done.load(std::memory_order_acquire) || !ring.empty()) {
         if (ring.pop(req)) {
-            fresh_oms.submit(req);
+            (void)fresh_oms.submit(req);
             ++consumed;
         }
     }
     // Drain any final items
     while (ring.pop(req)) {
-        fresh_oms.submit(req);
+        (void)fresh_oms.submit(req);
         ++consumed;
     }
 

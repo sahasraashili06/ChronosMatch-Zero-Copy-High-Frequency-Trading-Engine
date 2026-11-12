@@ -26,14 +26,16 @@
  * array can be embedded in any struct without relocation concerns.
  */
 
+
+
 #pragma once
 
-#include <array>
 #include <cassert>
 #include <cstdint>
-#include <cstring>
+#include <memory>
 #include <new>
 #include <type_traits>
+#include <cstddef>
 
 namespace chronosx {
 
@@ -45,15 +47,18 @@ class ObjectPool {
                   "T must be default-constructible");
 
 public:
-    ObjectPool() {
-        // Build the initial free-list: 0 → 1 → 2 → … → Capacity-1 → kEnd
-        for (uint32_t i = 0; i < static_cast<uint32_t>(Capacity) - 1; ++i) {
-            free_next_[i] = i + 1;
-        }
-        free_next_[Capacity - 1] = kEnd;
-        free_head_ = 0;
-        allocated_count_ = 0;
+    ObjectPool()
+    : storage_(std::make_unique<T[]>(Capacity)),
+      free_next_(std::make_unique<uint32_t[]>(Capacity))
+{
+    for (uint32_t i = 0; i < static_cast<uint32_t>(Capacity) - 1; ++i) {
+        free_next_[i] = i + 1;
     }
+
+    free_next_[Capacity - 1] = kEnd;
+    free_head_ = 0;
+    allocated_count_ = 0;
+}
 
     // Non-copyable, non-movable (owns fixed memory).
     ObjectPool(const ObjectPool&)            = delete;
@@ -98,10 +103,10 @@ public:
     // index_of(ptr) — O(1), useful for intrusive linked-lists
     // ----------------------------------------------------------------
     [[nodiscard]] uint32_t index_of(const T* ptr) const noexcept {
-        const auto diff = ptr - storage_.data();
-        assert(diff >= 0 && static_cast<std::size_t>(diff) < Capacity);
-        return static_cast<uint32_t>(diff);
-    }
+    const auto diff = ptr - storage_.get();
+    assert(diff >= 0 && static_cast<std::size_t>(diff) < Capacity);
+    return static_cast<uint32_t>(diff);
+}
 
     // ----------------------------------------------------------------
     // at(idx) — O(1) random access by pool index
@@ -128,16 +133,12 @@ public:
 private:
     static constexpr uint32_t kEnd = UINT32_MAX;  // Sentinel: end of free-list
 
-    // Contiguous storage for T objects.
-    // alignas(alignof(T)) ensures each slot is properly aligned.
-    alignas(alignof(T)) std::array<T, Capacity> storage_{};
+// Large arrays allocated on the heap to avoid stack overflow.
+std::unique_ptr<T[]> storage_;
+std::unique_ptr<uint32_t[]> free_next_;
 
-    // Intrusive free-list: free_next_[i] is the index of the next free slot
-    // after slot i, or kEnd if it's the last free slot.
-    std::array<uint32_t, Capacity> free_next_{};
-
-    uint32_t    free_head_       {0};
-    std::size_t allocated_count_ {0};
+uint32_t    free_head_{0};
+std::size_t allocated_count_{0};
 };
 
 } // namespace chronosx

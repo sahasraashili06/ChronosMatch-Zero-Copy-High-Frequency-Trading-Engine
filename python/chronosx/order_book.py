@@ -74,6 +74,18 @@ class OrderBook:
         lvl = self._asks.get(price)
         return lvl.total_qty if lvl else 0
 
+    def top_bids(self, depth: int = 5) -> list:
+        """Return [(price, qty), ...] for top *depth* bid levels (best first)."""
+        prices = (sorted(self._bids.keys(), reverse=True)
+                  if not _HAS_SORTED else list(self._bids.keys()))
+        return [(p, self._bids[p].total_qty) for p in prices[:depth]]
+
+    def top_asks(self, depth: int = 5) -> list:
+        """Return [(price, qty), ...] for top *depth* ask levels (best first)."""
+        prices = (sorted(self._asks.keys())
+                  if not _HAS_SORTED else list(self._asks.keys()))
+        return [(p, self._asks[p].total_qty) for p in prices[:depth]]
+
     def find_order_idx(self, order_id: int) -> int:
         return self._order_index.get(order_id, NULL_IDX)
 
