@@ -5,7 +5,7 @@ from pathlib import Path
 import streamlit as st
 import pandas as pd
 
-# Locate the existing Python engine
+# Connect existing Python engine
 ROOT = Path(__file__).resolve().parent
 PYTHON_DIR = ROOT / "python"
 sys.path.insert(0, str(PYTHON_DIR))
@@ -22,7 +22,6 @@ st.set_page_config(
 )
 
 
-# Persistent engine and dashboard state
 def initialize():
     st.session_state.oms = OrderManagementSystem(RiskEngine())
     st.session_state.next_id = 1
@@ -35,28 +34,23 @@ if "oms" not in st.session_state:
     initialize()
 
 
-# Formatting helper: engine price uses 10,000 units per price unit
 def format_price(price):
     return f"${price / 10000:.4f}"
 
 
 st.title("⚡ ChronosMatch Pro")
-st.caption(
-    "Zero-Copy High-Frequency Trading Engine | "
-    "Interactive Trading Simulator"
-)
+st.subheader("Zero-Copy High-Frequency Trading Engine")
+st.caption("Python Edition | Interactive Academic Project Demo")
 
 st.success("SIMULATION MODE — No real exchange connection")
 
-# Sidebar
 with st.sidebar:
     st.header("Control Panel")
-
     st.write("Engine: ChronosMatch Python")
     st.write("Order Management: Active")
     st.write("Risk Validation: Enabled")
 
-    if st.button("Reset Simulation", use_container_width=True):
+    if st.button("Reset Simulation"):
         initialize()
         st.rerun()
 
@@ -67,7 +61,6 @@ with st.sidebar:
 oms = st.session_state.oms
 book = oms.book
 
-# Current engine metrics
 best_bid = book.best_bid()
 best_ask = book.best_ask()
 spread = book.spread()
@@ -76,10 +69,12 @@ c1, c2, c3, c4 = st.columns(4)
 
 c1.metric("Total Orders", oms.order_count)
 c2.metric("Active Orders", book.active_order_count())
+
 c3.metric(
     "Best Bid",
     format_price(best_bid) if best_bid is not None else "N/A"
 )
+
 c4.metric(
     "Best Ask",
     format_price(best_ask) if best_ask is not None else "N/A"
@@ -90,10 +85,11 @@ if spread is not None:
 
 st.divider()
 
-# Order placement
+# ORDER PLACEMENT
 st.header("Trading Operations")
 
 with st.form("order_form"):
+
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -123,7 +119,7 @@ with st.form("order_form"):
         )
     else:
         price = 0.0
-        st.info("Market orders execute against available opposite-side liquidity.")
+        st.info("Market order uses available opposite-side liquidity.")
 
     submitted = st.form_submit_button(
         "Submit Order",
@@ -132,6 +128,7 @@ with st.form("order_form"):
     )
 
     if submitted:
+
         order_id = st.session_state.next_id
 
         request = OrderRequest(
@@ -158,8 +155,11 @@ with st.form("order_form"):
             "Order ID": order_id,
             "Side": side,
             "Type": order_type,
-            "Price": format_price(int(round(price * 10000)))
-                     if order_type == "Limit" else "Market",
+            "Price": (
+                format_price(int(round(price * 10000)))
+                if order_type == "Limit"
+                else "Market"
+            ),
             "Quantity": int(quantity),
             "Status": status,
             "Risk": risk
@@ -198,7 +198,7 @@ with st.form("order_form"):
 
 st.divider()
 
-# Order book
+# ORDER BOOK
 st.header("Live Order Book")
 
 bid_col, ask_col = st.columns(2)
@@ -209,10 +209,12 @@ try:
 
     with bid_col:
         st.subheader("🟢 BUY / BIDS")
+
         bid_data = [
             {"Price": format_price(p), "Quantity": q}
             for p, q in bids
         ]
+
         st.dataframe(
             pd.DataFrame(bid_data, columns=["Price", "Quantity"]),
             use_container_width=True,
@@ -221,10 +223,12 @@ try:
 
     with ask_col:
         st.subheader("🔴 SELL / ASKS")
+
         ask_data = [
             {"Price": format_price(p), "Quantity": q}
             for p, q in asks
         ]
+
         st.dataframe(
             pd.DataFrame(ask_data, columns=["Price", "Quantity"]),
             use_container_width=True,
@@ -237,39 +241,44 @@ except Exception as error:
 
 st.divider()
 
-# Trade history
+# TRADE HISTORY
 st.header("Executed Trade History")
 
 if st.session_state.trades:
+
     st.dataframe(
         pd.DataFrame(st.session_state.trades),
         use_container_width=True,
         hide_index=True
     )
+
 else:
     st.info("No matched trades yet. Submit opposite-side matching orders.")
 
 
-# Order history
+# ORDER HISTORY
 st.header("Order History")
 
 if st.session_state.order_logs:
+
     st.dataframe(
         pd.DataFrame(st.session_state.order_logs),
         use_container_width=True,
         hide_index=True
     )
+
 else:
     st.info("No orders submitted yet.")
 
 
-# Cancellation
+# ORDER CANCELLATION
 st.divider()
 st.header("Order Cancellation")
 
 active = st.session_state.active_orders
 
 if active:
+
     selected_id = st.selectbox(
         "Select an active order",
         options=list(active.keys()),
@@ -277,6 +286,7 @@ if active:
     )
 
     if st.button("Cancel Selected Order"):
+
         cancel_response = oms.cancel(selected_id)
         cancel_result = cancel_response.match_result
 
@@ -304,15 +314,18 @@ if active:
             )
 
         st.rerun()
+
 else:
     st.info("No active orders available for cancellation.")
 
 
 st.divider()
 
+# PROJECT VERIFICATION
 st.header("Project Verification")
 
 v1, v2 = st.columns(2)
+
 v1.metric("Previously Passed Tests", "374 / 374")
 v2.metric("Previously Measured Coverage", "85%")
 
